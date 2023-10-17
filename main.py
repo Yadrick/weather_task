@@ -1,4 +1,3 @@
-import requests
 import geocoder
 import my_package
 from datetime import timedelta, timezone, datetime
@@ -82,21 +81,17 @@ def main():
                     else:
                         break
 
-
                     return_button = input('Для возврата в меню введите "r".\n')
                 elif action_number in "03":
                     pass
 
-
                 if return_button == 'r' or return_button == 'к':
                     if return_button == 'к':
-                        print("Я знаю, что ты хотел ввести 'r', возвращаю)) ")    
+                        print("Я знаю, что ты хотел ввести 'r', возвращаю)) ")
                     break
         except ValueError:
             print("ошибка")
 
 
-
 if __name__ == '__main__':
     main()
-
