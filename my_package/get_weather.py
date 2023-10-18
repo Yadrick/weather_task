@@ -5,6 +5,7 @@ API_KEY = "bbeae2106b4b784ac7fc75027c4886b3"
 URL_FOR_DATA_NAME = "https://api.openweathermap.org/data/2.5/weather?q={}&appid={}"
 URL_FOR_DATA_COORDS = "https://api.openweathermap.org/data/2.5/weather?lat={}&lon={}&appid={}"
 
+
 def get_weather_by_lat_lon(lat: float, lon: float) -> dict:
 
     try:
@@ -22,7 +23,7 @@ def get_weather_by_lat_lon(lat: float, lon: float) -> dict:
         "time_utc": data_from_api.get("dt"),
         "shift_utc": data_from_api.get("timezone"),
     }
-
+    
     return required_data_from_api
 
 
@@ -42,6 +43,6 @@ def get_weather_by_region_name(city_name: str) -> dict:
     except (requests.exceptions.ReadTimeout, ValueError) as e:
         print(f'\nОбнаружена ошибка!\n{e}')
         return None
-    except:
-        print("Данного города нет в базе данных, попробуйте заново :(")
+    except Exception:
+        print("Данного города нет в базе данных:(")
         return None
