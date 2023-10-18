@@ -1,5 +1,6 @@
 import geocoder
 import my_package
+import re
 from clear_screen import clear
 
 
@@ -47,6 +48,8 @@ def main():
             return_button = "r"
             if action_number in "01":
                 city_name = input("\nВведите название города: ")
+                pattern = r'\b\w*-?\w*\b'
+                city_name = re.search(pattern, city_name).group()
                 data_weather = my_package.get_weather_by_region_name(city_name)
                 
                 if my_package.city_name_validation(data_weather):
@@ -94,6 +97,12 @@ def main():
                         max_counts_weather_data = my_package.max_counts_weather_data()
                         print(f"\nВсего записей: {max_counts_weather_data}")
                         
+                        if max_counts_weather_data == 0:
+                            print("Ничем помочь не могу (´• ω •`)\n")
+                            input("Чтобы продолжить, введите что угодно :)")
+                            clear()
+                            break
+
                         count_records = input("Сколько последних записей вы хотите увидеть?\n"
                                               "(при введении большего числа записей, чем имеется, покажется максимальное количество)\n ")
                         try:
@@ -108,6 +117,6 @@ def main():
         except ValueError:
             print("ой")
 
-
+  
 if __name__ == '__main__':
     main()

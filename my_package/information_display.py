@@ -15,7 +15,7 @@ def information_output_from_db(data: tuple):
     hours_shift = datetime.utcfromtimestamp(shift_utc).hour
     minutes_shift = datetime.utcfromtimestamp(shift_utc).minute
     timezone_1 = timezone(timedelta(hours=hours_shift, minutes=minutes_shift))
-    dt_object = datetime.utcfromtimestamp(time_utc-shift_utc, timezone_1)
+    dt_object = datetime.fromtimestamp(time_utc-shift_utc, timezone_1)
 
     template = f'''
     Текущее время: {dt_object}\n    Название города: {city_name}\n\
