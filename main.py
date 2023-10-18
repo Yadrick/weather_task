@@ -1,6 +1,5 @@
 import geocoder
 import my_package
-from datetime import timedelta, timezone, datetime
 from clear_screen import clear
 
 
@@ -18,48 +17,6 @@ QUERY_HISTORY_TEXT = '''
 
 [r] Вернуться назад
 '''
-
-
-def information_output_from_db(data: tuple):
-
-    city_name = data[1]
-    weather = data[2]
-    temp = data[3]
-    temp_feels = data[4]
-    speed_wind = data[5]
-    time_utc = data[6]
-    shift_utc = data[7]
-
-    hours_shift = datetime.utcfromtimestamp(shift_utc).hour
-    minutes_shift = datetime.utcfromtimestamp(shift_utc).minute
-    timezone_1 = timezone(timedelta(hours=hours_shift, minutes=minutes_shift))
-    dt_object = datetime.fromtimestamp(time_utc, timezone_1)
-
-    template = f'''
-    Текущее время: {dt_object}\n    Название города: {city_name}\n\
-    Погодные условия: {weather}\n    Текущая температура: {temp} градусов по цельсию\n\
-    Ощущается как: {temp_feels} градусов по цельсию \n\
-    Скорость ветра: {speed_wind} м/c
-    '''
-    print(template)
-    
-
-def information_output_template(data: dict):
-
-    my_package.insert_weather_data(data)
-
-    hours_shift = datetime.utcfromtimestamp(data.get("shift_utc")).hour
-    minutes_shift = datetime.utcfromtimestamp(data.get("shift_utc")).minute
-    timezone_1 = timezone(timedelta(hours=hours_shift, minutes=minutes_shift))
-    dt_object = datetime.fromtimestamp(data.get("time_utc"), timezone_1)
-
-    template = f'''
-    Текущее время: {dt_object}\n    Название города: {data.get("city_name")}\n\
-    Погодные условия: {data.get("weather")}\n    Текущая температура: {data.get("temp")} градусов по цельсию\n\
-    Ощущается как: {data.get("temp_feels")} градусов по цельсию \n\
-    Скорость ветра: {data.get("speed_wind")} м/c
-    '''
-    print(template)
 
 
 def get_current_location() -> list:
@@ -93,7 +50,7 @@ def main():
                 data_weather = my_package.get_weather_by_region_name(city_name)
                 
                 if my_package.city_name_validation(data_weather):
-                    information_output_template(data_weather)
+                    my_package.information_output_template(data_weather)
                 else:
                     print("\nПопробуйте снова\n")
             
@@ -110,7 +67,7 @@ def main():
                 if my_package.location_validation(latitude, longitude):
                     data_weather = my_package.get_weather_by_lat_lon(latitude, longitude)
                     if my_package.city_name_validation(data_weather):
-                        information_output_template(data_weather)
+                        my_package.information_output_template(data_weather)
                     else:
                         print("\nПопробуйте снова\n")
 
@@ -136,18 +93,20 @@ def main():
                         
                         max_counts_weather_data = my_package.max_counts_weather_data()
                         print(f"\nВсего записей: {max_counts_weather_data}")
-                        count_records = input("Сколько последних записей вы хотите увидеть?\n"
-                                              "(при введении большего числа записей, чем имеется, покажется максимальное количество) ")
-
-                        data_from_db = my_package.read_weather_data(int(count_records))
                         
-                        for one_of_data in range(len(data_from_db)):
-                            information_output_from_db(data_from_db[one_of_data])
-
-                        input("Чтобы продолжить, введите что угодно :)")
-
+                        count_records = input("Сколько последних записей вы хотите увидеть?\n"
+                                              "(при введении большего числа записей, чем имеется, покажется максимальное количество)\n ")
+                        try:
+                            data_from_db = my_package.read_weather_data(int(count_records))
+                        
+                            for one_of_data in range(len(data_from_db)):
+                                my_package.information_output_from_db(data_from_db[one_of_data])
+                        except Exception as ex:
+                            print(f"Ошибка! {ex}")
+                        input("\nЧтобы продолжить, введите что угодно :)")
+                        clear()
         except ValueError:
-            print("ошибка")
+            print("ой")
 
 
 if __name__ == '__main__':
