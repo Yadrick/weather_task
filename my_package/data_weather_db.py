@@ -19,7 +19,7 @@ def create_db_weather():
             time_utc INTEGER,
             shift_utc INTEGER
             )''')
-        
+
 
 def drop_table_weather():
     with sq.connect("data_weather.db") as con:
@@ -38,15 +38,17 @@ def insert_weather_data(data_weather: dict):
                     {data_weather.get('temp_feels')}, {data_weather.get('speed_wind')}, {data_weather.get('time_utc')},
                     {data_weather.get('shift_utc')})
                     ''')
-        
+
 
 def read_weather_data(count_records_output: int) -> list:
     with sq.connect("data_weather.db") as con:
         cur = con.cursor()
 
         try:
-            max_counts = cur.execute(f'SELECT seq FROM {NAME_SUPPORTING_TABLE} ').fetchone()[0]
-            cur.execute(f'SELECT * FROM {NAME_TABLE} LIMIT {count_records_output} OFFSET {max_counts-count_records_output}')
+            max_counts = cur.execute(
+                f'SELECT seq FROM {NAME_SUPPORTING_TABLE} ').fetchone()[0]
+            cur.execute(
+                f'SELECT * FROM {NAME_TABLE} LIMIT {count_records_output} OFFSET {max_counts-count_records_output}')
             result = cur.fetchall()
         except Exception:
             result = []
@@ -57,7 +59,8 @@ def max_counts_weather_data():
     with sq.connect("data_weather.db") as con:
         cur = con.cursor()
         try:
-            max_counts = cur.execute(f'SELECT seq FROM {NAME_SUPPORTING_TABLE} ').fetchone()[0]
+            max_counts = cur.execute(
+                f'SELECT seq FROM {NAME_SUPPORTING_TABLE} ').fetchone()[0]
         except Exception:
             max_counts = 0
     return max_counts

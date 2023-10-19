@@ -1,7 +1,8 @@
 def city_name_validation(weather_data_list: dict):
-    if weather_data_list == None:
+    if weather_data_list is None:
         return False
     return True
+
 
 def location_validation(lat: float, lon: float):
 
