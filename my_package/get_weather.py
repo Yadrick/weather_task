@@ -4,17 +4,19 @@ import geocoder
 
 API_KEY = "bbeae2106b4b784ac7fc75027c4886b3"
 URL_FOR_DATA_NAME = "https://api.openweathermap.org/data/2.5/weather?q={}&appid={}"
-URL_FOR_DATA_COORDS = "https://api.openweathermap.org/data/2.5/weather?lat={}&lon={}&appid={}"
+URL_FOR_DATA_COORDS = (
+    "https://api.openweathermap.org/data/2.5/weather?lat={}&lon={}&appid={}"
+)
 
 
 def get_weather_by_lat_lon(lat: float, lon: float) -> dict:
-
     try:
         data_from_api = requests.get(
-            URL_FOR_DATA_COORDS.format(
-                lat, lon, API_KEY), timeout=2.5).json()
+            URL_FOR_DATA_COORDS.format(lat, lon, API_KEY), timeout=2.5
+        ).json()
+
     except (requests.exceptions.ReadTimeout, ValueError) as e:
-        print(f'\nОбнаружена ошибка!\n{e}')
+        print(f"\nОбнаружена ошибка!\n{e}")
         return None
 
     required_data_from_api = {
@@ -31,11 +33,10 @@ def get_weather_by_lat_lon(lat: float, lon: float) -> dict:
 
 
 def get_weather_by_region_name(city_name: str) -> dict:
-
     try:
         data_for_lat_and_lon = requests.get(
-            URL_FOR_DATA_NAME.format(
-                city_name, API_KEY), timeout=2.5).json()
+            URL_FOR_DATA_NAME.format(city_name, API_KEY), timeout=2.5
+        ).json()
 
         lat = data_for_lat_and_lon.get("coord").get("lat")
         lon = data_for_lat_and_lon.get("coord").get("lon")
@@ -46,7 +47,7 @@ def get_weather_by_region_name(city_name: str) -> dict:
 
         return required_data
     except (requests.exceptions.ReadTimeout, ValueError) as e:
-        print(f'\nОбнаружена ошибка!\n{e}')
+        print(f"\nОбнаружена ошибка!\n{e}")
         return None
     except Exception:
         print("Данного города нет в базе данных:(")
@@ -54,12 +55,13 @@ def get_weather_by_region_name(city_name: str) -> dict:
 
 
 def get_current_location() -> list:
-    location = geocoder.ip('me')
+    location = geocoder.ip("me")
 
     if location.ok:
         latitude, longitude = location.latlng
         print(
-            f"\nВаше местоположение успешно определено!\nКоординаты: Широта {latitude}, Долгота {longitude}")
+            f"\nВаше местоположение успешно определено!\nКоординаты: Широта {latitude}, Долгота {longitude}"
+        )
         return location.latlng
     else:
         print("Не удалось определить местоположение.")
