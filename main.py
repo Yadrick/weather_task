@@ -3,17 +3,17 @@ import all_actions
 from clear_screen import clear
 
 
-MENU_TEXT = '''
+MENU_TEXT = """
 [1] Узнать погоду в городе (по названию)
 [2] Узнать погоду по моему местоположению
 [3] Узнать историю запросов
 
 [0] Закрыть программу
-'''
+"""
 
 
 def main():
-
+    clear()
     while True:
         my_package.create_db_weather()
         print(MENU_TEXT)
@@ -36,5 +36,5 @@ def main():
             print("ой")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

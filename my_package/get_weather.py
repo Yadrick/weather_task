@@ -12,7 +12,9 @@ URL_FOR_DATA_COORDS = (
 def get_weather_by_lat_lon(lat: float, lon: float) -> dict:
     try:
         data_from_api = requests.get(
-            URL_FOR_DATA_COORDS.format(lat, lon, API_KEY), timeout=2.5
+            URL_FOR_DATA_COORDS.format(lat, lon, API_KEY),
+            params={"units": "C", "lang": "ru"},
+            timeout=2.5,
         ).json()
 
     except (requests.exceptions.ReadTimeout, ValueError) as e:
@@ -35,7 +37,9 @@ def get_weather_by_lat_lon(lat: float, lon: float) -> dict:
 def get_weather_by_region_name(city_name: str) -> dict:
     try:
         data_for_lat_and_lon = requests.get(
-            URL_FOR_DATA_NAME.format(city_name, API_KEY), timeout=2.5
+            URL_FOR_DATA_NAME.format(city_name, API_KEY),
+            params={"units": "C", "lang": "ru"},
+            timeout=2.5,
         ).json()
 
         lat = data_for_lat_and_lon.get("coord").get("lat")
