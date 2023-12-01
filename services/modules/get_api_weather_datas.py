@@ -8,16 +8,38 @@ from ..classes.exceptions import (
 )
 from settings import API_KEY, URL_FOR_DATA_NAME
 from settings import INPUT_CITY_NAME_TEXT
-
+from datetime import datetime, timezone, timedelta
 
 import requests
 import geocoder
 
 
-def data_processing(response: dict, storage__weather_history: HistoryDB) -> None:
+def time_conversion(time_utc: int, shift_utc: int) -> str:
     """
-    Функция создает объект Погоды, после чего выводит его строковое представление.
-    Сохраняет в БД.
+    Функция получает время в utc с сервера, переводит его в требуемый по ТЗ формат
+
+    Args:
+        time_utc(int): время в формате utc
+        shift_utc(int): часовой пояс в формате utc
+
+    Returns:
+        str: Преобразованное время в формате: 2023-10-03 09:48:47+03:00
+    """
+    present_shift_hours = datetime.utcfromtimestamp(shift_utc).hour
+    present_shift_minutes = datetime.utcfromtimestamp(shift_utc).minute
+
+    present_time = datetime.fromtimestamp(
+        time_utc - shift_utc,
+        tz=timezone(
+            timedelta(hours=present_shift_hours, minutes=present_shift_minutes)
+        ),
+    )
+    return str(present_time)
+
+
+def data_pre_processing(response: dict, storage__weather_history: HistoryDB) -> None:
+    """
+    Функция забирает нужные данные из ответа с API. Передает их на обработку.
 
      Args:
         response(dict): необработанные данные с сервера
@@ -27,7 +49,31 @@ def data_processing(response: dict, storage__weather_history: HistoryDB) -> None
         None
 
     """
-    data_from_api_object = Weather(response)
+    city_name = response.get("name")
+    weather = response.get("weather")[0].get("description")
+    temp = response.get("main").get("temp")
+    temp_feels = response.get("main").get("feels_like")
+    speed_wind = response.get("wind").get("speed")
+    present_time = time_conversion(response.get("dt"), response.get("timezone"))
+    response_tuple = (city_name, weather, temp, temp_feels, speed_wind, present_time)
+
+    data_processing(response_tuple, storage__weather_history)
+
+
+def data_processing(required_data: tuple, storage__weather_history: HistoryDB) -> None:
+    """
+    Функция создает объект Погоды, после чего выводит его строковое представление.
+    Сохраняет в БД.
+
+     Args:
+        required_data(tuple): необработанные данные с сервера
+        storage__weather_history(HistoryDB): объект по работе с Базой данных.
+
+    Returns:
+        None
+
+    """
+    data_from_api_object = Weather(*required_data)
     print(data_from_api_object)
     storage__weather_history.insert_weather_data(data_from_api_object)
 

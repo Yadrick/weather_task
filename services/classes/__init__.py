@@ -8,5 +8,5 @@ from .exceptions import (
     NegativeValueException,
 )
 from .HistoryDBs import HistoryDB
-from .Weathers import WeatherReading, Weather
+from .Weathers import Weather
 from .ActionsTypes import ActionType

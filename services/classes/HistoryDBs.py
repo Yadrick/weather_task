@@ -9,7 +9,7 @@ from settings import (
     SELECT_ALL_SEQ_FOR_USER_REQUEST,
 )
 from .exceptions import DatabaseException
-from .Weathers import WeatherReading, Weather
+from .Weathers import Weather
 
 
 class HistoryDB:
@@ -76,9 +76,7 @@ class HistoryDB:
         except Exception:
             raise DatabaseException()
 
-    def processing_data_from_db(
-        self, weather_data_list: list[tuple]
-    ) -> list[WeatherReading]:
+    def processing_data_from_db(self, weather_data_list: list[tuple]) -> list[Weather]:
         """
         Функция получает данные о погоде в виде списка кортежей. Возвращает список объектов Погоды,
         готовые для вывода пользователю.
@@ -87,18 +85,18 @@ class HistoryDB:
             weather_data_list(list[tuple])): список данных о погоде
 
         Returns:
-            list[WeatherReading] - возвращает список обьектов погоды для чтения.
+            list[Weather] - возвращает список обьектов погоды для чтения.
         """
         list_weather_object = []
 
         for weather_data_tuple in weather_data_list:
-            weather_data = WeatherReading(*weather_data_tuple)
+            weather_data = Weather(*weather_data_tuple[1:])
 
             list_weather_object.append(weather_data)
 
         return list_weather_object
 
-    def read_weather_data(self, count_records_output: int) -> list[WeatherReading]:
+    def read_weather_data(self, count_records_output: int) -> list[Weather]:
         """
         Функция получает данные из Базы Данных в количестве {count_records_output} последних штук.
         Если данных меньше, чем {count_records_output}, то вернутся просто все имеющиееся данные.
