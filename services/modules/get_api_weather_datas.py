@@ -104,7 +104,7 @@ def get_data_from_api(city_name: str, storage__weather_history: HistoryDB) -> No
             timeout=3,
         )
         response.raise_for_status()
-        data_processing(response.json(), storage__weather_history)
+        data_pre_processing(response.json(), storage__weather_history)
 
     except requests.exceptions.HTTPError:
         raise RequestsExceptionNotFound()
