@@ -29,7 +29,7 @@ def time_conversion(time_utc: int, shift_utc: int) -> str:
     present_shift_minutes = datetime.utcfromtimestamp(shift_utc).minute
 
     present_time = datetime.fromtimestamp(
-        time_utc - shift_utc,
+        time_utc,
         tz=timezone(
             timedelta(hours=present_shift_hours, minutes=present_shift_minutes)
         ),
