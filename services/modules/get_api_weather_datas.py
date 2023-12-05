@@ -25,14 +25,9 @@ def time_conversion(time_utc: int, shift_utc: int) -> str:
     Returns:
         str: Преобразованное время в формате: 2023-10-03 09:48:47+03:00
     """
-    present_shift_hours = datetime.utcfromtimestamp(shift_utc).hour
-    present_shift_minutes = datetime.utcfromtimestamp(shift_utc).minute
-
     present_time = datetime.fromtimestamp(
         time_utc,
-        tz=timezone(
-            timedelta(hours=present_shift_hours, minutes=present_shift_minutes)
-        ),
+        timezone(timedelta(seconds=shift_utc)),
     )
     return str(present_time)
 
