@@ -34,7 +34,7 @@ def time_conversion(time_utc: int, shift_utc: int) -> str:
 
 def data_pre_processing(response: dict, storage__weather_history: HistoryDB) -> None:
     """
-    Функция забирает нужные данные из ответа с API. Передает их на обработку.
+    Функция забирает нужные данные из ответа с API. Обрабатывает и берет нужные.
 
      Args:
         response(dict): необработанные данные с сервера
@@ -61,7 +61,7 @@ def data_processing(required_data: tuple, storage__weather_history: HistoryDB) -
     Сохраняет в БД.
 
      Args:
-        required_data(tuple): необработанные данные с сервера
+        required_data(tuple): обработанные данные с сервера
         storage__weather_history(HistoryDB): объект по работе с Базой данных.
 
     Returns:
